@@ -6,39 +6,37 @@ import { useState } from 'react';
 import AddItem from './components/AddItem';
 function App() {
   const[item, setItem] = useState(localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")) : []);
-      function setCheckbox(id){
-        // here change the check box
-        setItem(prevItem=>{
-            return prevItem.map(item=>{
-                if(item.id === id){
-                    return {
-                        ...item,
-                        isChecked: !item.isChecked
-                    }
-                }
-                return item;
-            })
-        })
+function setCheckbox(id) {
+      const updatedItems = item.map(i => {
+        if (i.id === id) {
+          return { ...i, isChecked: !i.isChecked };
+        }
+        return i;
+      });
+
+      setItem(updatedItems);
+      localStorage.setItem("items", JSON.stringify(updatedItems));
     }
-    function deleteTheItem(id){
-        setItem(prevItem=>{
-            return prevItem.filter(item=>item.id !== id);
+function deleteTheItem(id) {
+      const updatedItems = item.filter(item => item.id !== id);
 
-        })
-      localStorage.setItem("items", JSON.stringify(item));
-      }
+      setItem(updatedItems);
+      localStorage.setItem("items", JSON.stringify(updatedItems));
+    }
+function submitTheItem(e) {
+      e.preventDefault();
 
-function submitTheItem(e){
-  e.preventDefault();
-  // here goes the add item function
-  const id = item.length ? item[item.length - 1].id + 1 : 1;
-  const name = e.target.elements.add_item.value;
-  const newItem = {id, name, isChecked: false};
-  setItem(prevItem=>[...prevItem, newItem]);
-  console.log(item);
-  localStorage.setItem("items", JSON.stringify(item));
-  e.target.elements.add_item.value = "";
-}      
+      const id = item.length ? item[item.length - 1].id + 1 : 1;
+      const name = e.target.elements.add_item.value;
+      const newItem = { id, name, isChecked: false };
+
+      const updatedItems = [...item, newItem];
+
+      setItem(updatedItems);
+      localStorage.setItem("items", JSON.stringify(updatedItems));
+
+      e.target.elements.add_item.value = ""; 
+}     
   return (
     <div className="App">
         <Header title={"Grocery List"}></Header>
