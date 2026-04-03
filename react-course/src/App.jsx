@@ -10,9 +10,23 @@ function App() {
 const[item, setItem] = useState(localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")) : []);
 const [search, setSearch] = useState("");
 
+const API_URL= "http://localhost:3500/items";
 useEffect(()=>{
-  console.log("Render")
-})
+  // item changes fetch and load item
+  const fetchItems = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw Error("Did not receive expected data");
+      const listItems = await response.json();
+      setItem(listItems);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  (async () => await fetchItems())();
+  
+},[])
 
 
 function searchItems(){
@@ -57,7 +71,9 @@ function submitTheItem(e) {
         <Header title={"Grocery List"}></Header>
         <AddItem onSubmitItem={submitTheItem}></AddItem>
         <SearchItem  searchQ={search} setSearch={setSearch}  />
-        <Content items={item.filter((i) => i.name.toLowerCase().includes(search.toLowerCase()))} setCheckbox={setCheckbox} deleteTheItem={deleteTheItem} onSubmitItem={submitTheItem}></Content> 
+        <Content items={item?.filter((i) =>
+  i.item?.toLowerCase().includes(search?.toLowerCase())
+) || []} setCheckbox={setCheckbox} deleteTheItem={deleteTheItem} onSubmitItem={submitTheItem}></Content> 
 
         <Footer length={item.length}></Footer>
     </div>
