@@ -5,12 +5,16 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import AddItem from './components/AddItem';
 import SearchItem from './components/SearchItem';
+import { postItem } from '../functions/postItem';
+import {deleteItem} from '../functions/deleteItem';
+import {setCheckBoxItem, unsetCheckBoxItem} from "../functions/setCheckBoxItem";
+
 function App() {
 
 const[item, setItem] = useState(localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")) : []);
 const [search, setSearch] = useState("");
 
-const API_URL= "http://localhost:3500/items";
+const API_URL= "http://localhost:3000/items";
 useEffect(()=>{
   // item changes fetch and load item
   const fetchItems = async () => {
@@ -43,13 +47,18 @@ function setCheckbox(id) {
       });
 
       setItem(updatedItems);
-      localStorage.setItem("items", JSON.stringify(updatedItems));
+      if(updatedItems.find(i => i.id === id).isChecked){
+        (async ()=> await setCheckBoxItem(id))();
+      }
+      else{
+        (async ()=> await unsetCheckBoxItem(id))();
+      }
     }
 function deleteTheItem(id) {
       const updatedItems = item.filter(item => item.id !== id);
 
       setItem(updatedItems);
-      localStorage.setItem("items", JSON.stringify(updatedItems));
+      (async ()=> await deleteItem(id))();
     }
 function submitTheItem(e) {
       e.preventDefault();
@@ -61,7 +70,8 @@ function submitTheItem(e) {
       const updatedItems = [...item, newItem];
 
       setItem(updatedItems);
-      localStorage.setItem("items", JSON.stringify(updatedItems));
+      /* add to the back end here */
+      async ()=> await postItem(newItem)();
 
       e.target.elements.add_item.value = ""; 
 }     
