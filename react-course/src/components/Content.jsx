@@ -1,5 +1,4 @@
 import ItemList from './ItemList';
-import AddItem from './AddItem';
 function Content({items,setCheckbox, deleteTheItem}) {
   return (
     <main>

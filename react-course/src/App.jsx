@@ -11,15 +11,14 @@ import {setCheckBoxItem, unsetCheckBoxItem} from "../functions/setCheckBoxItem";
 
 function App() {
 
-const[item, setItem] = useState(localStorage.getItem("items") ? JSON.parse(localStorage.getItem("items")) : []);
+const[item, setItem] = useState([]);
 const [search, setSearch] = useState("");
 
-const API_URL= "http://localhost:3000/items";
 useEffect(()=>{
   // item changes fetch and load item
   const fetchItems = async () => {
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch("http://localhost:3000/items");
       if (!response.ok) throw Error("Did not receive expected data");
       const listItems = await response.json();
       setItem(listItems);
@@ -32,7 +31,7 @@ useEffect(()=>{
   
 },[])
 
-
+console.log(item);
 function searchItems(){
   // take the serach function here onwards 
   const searchResult = item.filter(item => item.name.toLowerCase().includes(search.toLowerCase()));
@@ -45,6 +44,7 @@ function setCheckbox(id) {
         }
         return i;
       });
+      
 
       setItem(updatedItems);
       if(updatedItems.find(i => i.id === id).isChecked){
@@ -63,17 +63,19 @@ function deleteTheItem(id) {
 function submitTheItem(e) {
       e.preventDefault();
 
-      const id = item.length ? item[item.length - 1].id + 1 : 1;
+      const id = item.length ? Number(item[item.length - 1].id )+ 1 : 1;
       const name = e.target.elements.add_item.value;
       const newItem = { id, name, isChecked: false };
 
       const updatedItems = [...item, newItem];
 
       setItem(updatedItems);
+
       /* add to the back end here */
-      async ()=> await postItem(newItem)();
+      (async ()=> await postItem(newItem))();
 
       e.target.elements.add_item.value = ""; 
+      console.log(item);
 }     
 
   return (
@@ -82,7 +84,7 @@ function submitTheItem(e) {
         <AddItem onSubmitItem={submitTheItem}></AddItem>
         <SearchItem  searchQ={search} setSearch={setSearch}  />
         <Content items={item?.filter((i) =>
-  i.item?.toLowerCase().includes(search?.toLowerCase())
+  i.name?.toLowerCase().includes(search?.toLowerCase())
 ) || []} setCheckbox={setCheckbox} deleteTheItem={deleteTheItem} onSubmitItem={submitTheItem}></Content> 
 
         <Footer length={item.length}></Footer>

@@ -1,4 +1,4 @@
-const SearchItem = ({ searchQ = "", setSearch , setSearchFn }) => {
+const SearchItem = ({ searchQ = "", setSearch  }) => {
   return (
     <form>  
       <input

@@ -1,4 +1,4 @@
-export async function postItem(item) {
+export async function postItem(item, itemState) {
     try {
         // here the post item function will be implemented 
         const response = await fetch('http://localhost:3000/items', {
