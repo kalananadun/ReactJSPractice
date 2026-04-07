@@ -1,17 +1,12 @@
 {
   "items": [
     {
-      "id": 2,
-      "name": "pinochio",
-      "isChecked": false
-    },
-    {
-      "id": 3,
+      "id": "3",
       "name": "pizza",
       "isChecked": false
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "pie",
       "isChecked": false
     }
