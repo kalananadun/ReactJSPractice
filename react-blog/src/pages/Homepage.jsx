@@ -1,0 +1,11 @@
+import React from 'react'
+import Nav from '../components/Nav'
+const Homepage = () => {
+  return (
+    <div>
+      <Nav></Nav>
+    </div>
+  )
+}
+
+export default Homepage
