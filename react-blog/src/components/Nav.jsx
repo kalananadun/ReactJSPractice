@@ -1,9 +1,17 @@
 import React from 'react'
-
-const Nav = () => {
+import {Link} from 'react-router'
+const Nav = ({search, setSearch}) => {
   return (
-    <nav>
-      <h1>Nav</h1>
+    <nav className='nav'>
+      <form  className="search-form" onSubmit={(e)=>{
+        e.preventDefault();
+      }}>
+        <input type="text" name="search" id="search"  placeholder='search?' value={search} onChange={(e)=>{ setSearch(e.target.value)}}/>
+      </form>
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        <li><Link to="/about">About</Link></li> 
+      </ul>
     </nav>
   )
 }
