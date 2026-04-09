@@ -10,7 +10,8 @@ import Home from './components/Home'
 import PostPage from './pages/PostPage'
 import MainLayout from './layout/MainLayout'
 import { Route, Routes,useNavigate } from 'react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { use } from 'react'
 const App = () => {
   const navigate = useNavigate();
   const handleDelete = (id) => {
@@ -19,6 +20,7 @@ const App = () => {
     setPosts(updatedPosts);
     navigate('/');
   }
+  
   const [search, setSearch] = useState('')
   const [searchResult,setSearchResult] = useState([]);
   const [posts, setPosts] = useState([
@@ -56,11 +58,19 @@ const App = () => {
     setPostObj({ title: '', body: '' });
      navigate('/');
   }
+  useEffect(()=>{
+    // new data for the search result 
+    const filteredResults = posts.filter((post) => post.body.toLowerCase().includes(search.toLowerCase()) || post.title.toLowerCase().includes(search.toLowerCase()));
+    setSearchResult(filteredResults.reverse());
+    setSearchResult(filteredResults);
+    
+  },[posts,search])
+  {console.log(searchResult)}
   return (
     <div>
       <Routes>
-          <Route path="/" element={<MainLayout search={search} setSearch={setSearch} />} >
-            <Route index element={<Home posts ={posts}/>} />
+          <Route path="/" element={<MainLayout search={search} setSearch={setSearch} searchResult={searchResult} />} >
+            <Route index element={<Home posts ={posts} searchResult={searchResult} />} />
             <Route path="about" element={<About />} />
             <Route path="post">
               <Route index element={<NewPost postObj={postObj} submitPost={submitPost} setPostObj={setPostObj} />} />
