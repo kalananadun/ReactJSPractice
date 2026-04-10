@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { use } from 'react'
 import About from './components/About'
 import Header from './components/Header'
 import Nav from './components/Nav'
@@ -11,7 +11,7 @@ import PostPage from './pages/PostPage'
 import MainLayout from './layout/MainLayout'
 import { Route, Routes,useNavigate } from 'react-router'
 import { useState, useEffect } from 'react'
-import { use } from 'react'
+import api from './api/posts'
 const App = () => {
   const navigate = useNavigate();
   const handleDelete = (id) => {
@@ -23,26 +23,7 @@ const App = () => {
   
   const [search, setSearch] = useState('')
   const [searchResult,setSearchResult] = useState([]);
-  const [posts, setPosts] = useState([
-  {
-    id: 1,
-    title: 'My First Post',
-    datetime: 'July 01, 2021 11:17:36 AM',
-    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, ex.'
-  },
-  {
-    id: 2,
-    title:"My Second Post",
-    datetime: 'July 02, 2021 11:17:36 AM',
-    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, ex.'
-  },
-  {
-    id: 3,
-    title:"My Third Post",
-    datetime: 'July 03, 2021 11:17:36 AM',
-    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, ex.'
-  }
-]);
+  const [posts, setPosts] = useState([]);
   const [postObj,setPostObj] = useState({
     title:'',
     body:''
@@ -58,6 +39,29 @@ const App = () => {
     setPostObj({ title: '', body: '' });
      navigate('/');
   }
+  useEffect(()=>{
+    const getPosts = async ()=>{
+      try{
+        const response = await api.get("/posts");
+      console.log("hello world");
+      console.log(response.data);
+      if(response && response.data){
+        setPosts(response.data);
+        
+      }
+      else{
+        setPosts([]);
+        
+      }
+
+    }
+    catch(err){
+      console.log(`Error: ${err.message}`);
+    }
+    }
+
+    (async ()=> await getPosts())();
+  },[])
   useEffect(()=>{
     // new data for the search result 
     const filteredResults = posts.filter((post) => post.body.toLowerCase().includes(search.toLowerCase()) || post.title.toLowerCase().includes(search.toLowerCase()));
