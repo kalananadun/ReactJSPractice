@@ -4,9 +4,9 @@ const Feed = ({posts}) => {
   return (
     <>
     {
-        posts.map((post)=>{
-            return <PostItem key={post.id} post={post} />
-        })
+        posts.map((post)=>(
+            <PostItem key={post.id} post={post}/>
+          ))
     }
     </>
   )

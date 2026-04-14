@@ -12,13 +12,22 @@ import MainLayout from './layout/MainLayout'
 import { Route, Routes,useNavigate } from 'react-router'
 import { useState, useEffect } from 'react'
 import api from './api/posts'
+import useWindowSize from './hooks/useWindowSize'
+import useAxiosFetch from './hooks/useAxiosFetch'
+import { dataProvider } from './context/DataContext'
 const App = () => {
   const navigate = useNavigate();
   const handleDelete = (id) => {
     // delete the post with the given id
-    const updatedPosts = posts.filter((post) => post.id !== id);
-    setPosts(updatedPosts);
-    navigate('/');
+   try {
+    // using the api call to delete the post from the backend
+        const postId = parseInt(id);
+        const response = api.delete(`/posts/${postId}`);
+        console.log(response.data);
+        
+   } catch (error) {
+    console.log(error)
+   }
   }
   
   const [search, setSearch] = useState('')
@@ -28,40 +37,26 @@ const App = () => {
     title:'',
     body:''
   });
+  const {width} = useWindowSize();
+  const {data, fetchError, isLoading} = useAxiosFetch("http://localhost:3000/posts");
   const submitPost=(e)=>{
     console.log("Submit the post");
     // add a new post to the posts array here 
-    const id = posts.length ? Number(posts[posts.length - 1].id + 1) : 1;
+    const id = posts.length ? Number(posts[posts.length - 1].id )+ 1 : 1;
     const datetime = new Date().toLocaleString();
     const newPost = { id, title: postObj.title, datetime, body: postObj.body };
     const allPosts = [...posts, newPost];
+    const response = api.post('/posts', newPost);
     setPosts(allPosts);
     setPostObj({ title: '', body: '' });
      navigate('/');
   }
   useEffect(()=>{
-    const getPosts = async ()=>{
-      try{
-        const response = await api.get("/posts");
-      console.log("hello world");
-      console.log(response.data);
-      if(response && response.data){
-        setPosts(response.data);
-        
-      }
-      else{
-        setPosts([]);
-        
-      }
-
-    }
-    catch(err){
-      console.log(`Error: ${err.message}`);
-    }
-    }
-
-    (async ()=> await getPosts())();
-  },[])
+    setPosts(data);
+  },[data])
+{console.log(`Data : ${data}`);
+}
+ 
   useEffect(()=>{
     // new data for the search result 
     const filteredResults = posts.filter((post) => post.body.toLowerCase().includes(search.toLowerCase()) || post.title.toLowerCase().includes(search.toLowerCase()));
@@ -73,8 +68,8 @@ const App = () => {
   return (
     <div>
       <Routes>
-          <Route path="/" element={<MainLayout search={search} setSearch={setSearch} searchResult={searchResult} />} >
-            <Route index element={<Home posts ={posts} searchResult={searchResult} />} />
+          <Route path="/" element={<MainLayout search={search} setSearch={setSearch} searchResult={searchResult} width={width} />} >
+            <Route index element={<Home posts ={posts} searchResult={searchResult} isLoading={isLoading} fetchError={fetchError}/>} />
             <Route path="about" element={<About />} />
             <Route path="post">
               <Route index element={<NewPost postObj={postObj} submitPost={submitPost} setPostObj={setPostObj} />} />
