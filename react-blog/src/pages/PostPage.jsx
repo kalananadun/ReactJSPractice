@@ -1,10 +1,10 @@
-import React from 'react'
+import { useContext } from 'react'
 import { useParams } from 'react-router'
 import { Link } from 'react-router'
 import { useState, useEffect } from 'react'
-import api from '../api/posts'
-
-const PostPage = ({posts,handleDelete}) => {
+import DataContext from '../context/DataContext'
+const PostPage = () => {
+  const {api, posts, handleDelete} = useContext(DataContext);
   const {id} = useParams();
   const [post,setPost]= useState({})
   useEffect(()=>{

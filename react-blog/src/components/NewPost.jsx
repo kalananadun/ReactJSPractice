@@ -1,6 +1,7 @@
-import React from 'react'
-
-const NewPost = ({ postObj, setPostObj , submitPost}) => {
+import React, { useContext } from 'react'
+import DataContext from '../context/DataContext'
+const NewPost = () => {
+  const {setPostObj,postObj,submitPost } = useContext(DataContext);
   return (
     <main>
       <form onSubmit={(e)=>{e.preventDefault()}}>

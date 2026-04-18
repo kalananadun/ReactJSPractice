@@ -1,9 +1,11 @@
-import React from 'react'
+import { useContext } from 'react'
 import { Outlet } from 'react-router'
 import Header from '../components/Header'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
-const mainLayout = ({search, setSearch,searchResult, width }) => {
+import DataContext from '../context/DataContext'
+const mainLayout = () => {
+  const {search,setSearch, searchResult,width} = useContext(DataContext);
   return (
     <main>
       <Header width={width}></Header>
