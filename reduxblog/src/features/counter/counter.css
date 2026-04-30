@@ -1,0 +1,27 @@
+/* here runs the css code for the counter  */
+.app{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 320px;
+    
+}
+.counter{
+    display: flex;
+    flex-direction: row;
+}
+
+.button{
+    padding: 0.2 rem;
+    height: 3 rem;
+
+}
+
+.increment{
+    background-color: cyan;
+    
+}
+
+.decrement{
+    background-color: cornflowerblue;
+}
